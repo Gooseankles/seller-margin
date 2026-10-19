@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seller Margin – Marketplace Fee &amp; Profit Calculator</title>
+<meta name="description" content="Compare Etsy, eBay and Amazon fees side by side and see where you keep the most profit on each item.">
+<style>
+  :root{--bg:#fff;--fg:#1c1c1e;--mut:#6b6b70;--line:#e3e3e8;--acc:#0a6b4f;--card:#f6f7f9}
+  @media(prefers-color-scheme:dark){:root{--bg:#111214;--fg:#eee;--mut:#9a9aa0;--line:#2a2b30;--acc:#3ecf9a;--card:#1a1b1f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+  main{max-width:860px;margin:0 auto;padding:24px 16px 64px}
+  h1{font-size:1.7rem;margin:.2em 0}
+  p.lead{color:var(--mut);margin-top:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
+  label{display:block;font-size:.85rem;color:var(--mut)}
+  input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font-size:1rem}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{padding:10px 8px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  tr.best td{font-weight:600;color:var(--acc)}
+  .wrap{overflow-x:auto}
+  .note{font-size:.8rem;color:var(--mut);margin-top:16px}
+  .cta{margin-top:32px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  .cta a{color:var(--acc);font-weight:600}
+</style>
+</head>
+<body>
+<main>
+  <h1>Where should I sell this item?</h1>
+  <p class="lead">Enter your item. See fees and profit on each marketplace.</p>
+
+  <div class="grid">
+    <div><label for="price">Sale price ($)</label><input id="price" type="number" min="0" step="0.01" value="30"></div>
+    <div><label for="ship">Shipping charged to buyer ($)</label><input id="ship" type="number" min="0" step="0.01" value="5"></div>
+    <div><label for="cost">Your item cost ($)</label><input id="cost" type="number" min="0" step="0.01" value="8"></div>
+    <div><label for="shipcost">Your shipping cost ($)</label><input id="shipcost" type="number" min="0" step="0.01" value="5"></div>
+    <div><label for="units">Units sold / month</label><input id="units" type="number" min="1" step="1" value="20"></div>
+  </div>
+
+  <div class="wrap"><table id="out"><thead>
+    <tr><th>Marketplace</th><th>Fees / sale</th><th>Profit / sale</th><th>Margin</th><th>Profit / month</th></tr>
+  </thead><tbody></tbody></table></div>
+
+  <p class="note" id="note"></p>
+
+  <div class="cta">
+    <strong>Want to track this for your whole shop?</strong>
+    The Seller Margin Toolkit (Google Sheets) adds inventory, sales log, ad-spend ROAS and quarterly tax estimates.
+    <a href="#" id="buy">Coming soon</a>
+  </div>
+</main>
+<script src="fees.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const money = n => (n < 0 ? "-$" : "$") + Math.abs(n).toFixed(2);
+
+function calc(m, p, s, cost, shipCost, units){
+  const gross = p + s;
+  let pct = 0;
+  if (m.pctOnItemAndShipping) pct += gross * m.pctOnItemAndShipping / 100;
+  if (m.pctOnItemOnly) {
+    let r = p * m.pctOnItemOnly / 100;
+    if (m.minReferral) r = Math.max(r, m.minReferral);
+    pct += r;
+  }
+  let fees = m.listingFee + pct + gross * (m.paymentPct||0) / 100 + (m.paymentFixed||0);
+  if (m.perOrderSmall !== undefined) fees += gross <= 10 ? m.perOrderSmall : m.perOrderLarge;
+  fees += (m.monthly||0) / units;               // spread subscription across monthly units
+  const profit = gross - fees - cost - shipCost;
+  return {fees, profit, margin: gross ? profit / gross * 100 : 0, monthly: profit * units};
+}
+
+function render(){
+  const v = id => Math.max(0, parseFloat($(id).value) || 0);
+  const units = Math.max(1, v("units"));
+  const rows = FEES.marketplaces.map(m => ({m, ...calc(m, v("price"), v("ship"), v("cost"), v("shipcost"), units)}));
+  const best = Math.max(...rows.map(r => r.profit));
+  const tb = $("out").tBodies[0];
+  tb.innerHTML = "";
+  rows.forEach(r => {
+    const tr = tb.insertRow();
+    if (r.profit === best) tr.className = "best";
+    [r.m.name, money(r.fees), money(r.profit), r.margin.toFixed(1)+"%", money(r.monthly)]
+      .forEach(t => tr.insertCell().textContent = t);
+  });
+  $("note").textContent = "Fee data last updated " + FEES.updated +
+    ". Rates are estimates and may not match your category, country or store plan; confirm on each marketplace's official fee page. " +
+    "Amazon's monthly subscription is spread across your units/month. Not financial or tax advice.";
+}
+document.querySelectorAll("input").forEach(i => i.addEventListener("input", render));
+$("buy").addEventListener("click", e => e.preventDefault());
+render();
+</script>
+</body>
+</html>
