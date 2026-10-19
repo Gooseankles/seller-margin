@@ -28,7 +28,7 @@ for i, t in enumerate([
     "2. Inventory: list your products and unit costs.",
     "3. Sales Log: add one row per sale. Fees and profit fill in automatically.",
     "4. Ad Spend: log ad spend to see return on ad spend (ROAS).",
-    "5. Dashboard: monthly profit, margin and a quarterly tax set-aside estimate.",
+    "5. Dashboard: total revenue, fees, profit, margin after ads and a tax set-aside estimate.",
     "Not financial or tax advice. Tax rate is your own assumption; ask an accountant.",
 ], 3):
     ws.cell(row=i, column=1, value=t)
@@ -73,8 +73,8 @@ for r in range(2, 1002):
                    f'+(E{r}*D{r}+F{r})*VLOOKUP(C{r},Settings!$A$2:$F$5,3,FALSE)/100'
                    f'+(E{r}*D{r}+F{r})*VLOOKUP(C{r},Settings!$A$2:$F$5,4,FALSE)/100'
                    f'+VLOOKUP(C{r},Settings!$A$2:$F$5,5,FALSE)+VLOOKUP(C{r},Settings!$A$2:$F$5,6,FALSE),0))')
-    sl[f"J{r}"] = f'=IF(B{r}="","",E{r}*D{r}+F{r}-I{r}-G{r}-H{r})'
-    sl[f"K{r}"] = f'=IF(OR(B{r}="",E{r}*D{r}+F{r}=0),"",J{r}/(E{r}*D{r}+F{r}))'
+    sl[f"J{r}"] = f'=IF(B{r}="","",IF(ISNA(MATCH(B{r},Inventory!$A$2:$A$201,0)),"Check product",E{r}*D{r}+F{r}-I{r}-G{r}-H{r}))'
+    sl[f"K{r}"] = f'=IF(OR(B{r}="",NOT(ISNUMBER(J{r})),E{r}*D{r}+F{r}=0),"",J{r}/(E{r}*D{r}+F{r}))'
     sl[f"A{r}"].number_format = "yyyy-mm-dd"
     for c in "EFGHIJ": sl[f"{c}{r}"].number_format = MONEY
     sl[f"K{r}"].number_format = "0.0%"
@@ -100,7 +100,7 @@ items = [
     ("Total net profit", "=SUM('Sales Log'!J2:J1001)"),
     ("Total ad spend", "=SUM('Ad Spend'!C2:C61)"),
     ("Profit after ads", "=B5-B6"),
-    ("Overall margin", "=IF(B3=0,0,B7/B3)"),
+    ("Margin after ads", "=IF(B3=0,0,B7/B3)"),
     ("Tax set-aside (see Settings)", "=MAX(0,B7)*Settings!B8/100"),
     ("Per-quarter set-aside (total ÷ 4, use with a full year of data)", "=B9/4"),
 ]
