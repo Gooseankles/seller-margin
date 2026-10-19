@@ -136,7 +136,7 @@ Hi, I made a free fee/profit calculator for marketplace sellers (no signup, no a
 
 **Draft E (Show HN).**
 Title: Show HN: Fee calculator that compares Etsy, eBay and Amazon profit for one item
-Text: I built a static, client-side calculator (no signup) because I kept seeing sellers guess at which marketplace is cheaper. You enter cost, price and shipping and see net profit per marketplace. Fee tables are hand-checked against each marketplace's official page and dated. Known gaps: category-specific Amazon rates, tax. Feedback on the fee model very welcome.
+Text: I built a static, client-side calculator (no signup) because I kept seeing sellers guess at which marketplace is cheaper. You enter cost, price and shipping and see net profit per marketplace. Fee tables link to each marketplace's official fee page and are dated; I've confirmed eBay and Etsy's listing/transaction fees myself and flag the rest as unconfirmed on the page. Known gaps: category-specific Amazon rates, tax. Feedback on the fee model very welcome.
 
 **Draft F (reply to someone asking for a tracking sheet).**
 I use a simple Google Sheet with columns for cost, sale price, fees, shipping and date, then a monthly total for tax set-aside. I also put one together as a template (about $19, link in my profile) if you want to skip the setup, but a blank sheet with those columns works fine too. Disclosure: I'm the author.
