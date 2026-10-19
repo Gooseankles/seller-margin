@@ -36,6 +36,16 @@ window.FEES = {
       pctOnItemOnly: 15, minReferral: 0.30,
       paymentPct: 0, paymentFixed: 0,
       monthly: 0
+    },
+    {
+      id: "depop", name: "Depop (US)", verified: false,
+      source: "https://depophelp.zendesk.com/hc/en-us/articles/360003803179", // 403 to bots; rates from third-party blogs
+      listingFee: 0, paymentPct: 3.3, paymentFixed: 0.45, monthly: 0
+    },
+    {
+      id: "vinted", name: "Vinted (US, seller pays no fee)", verified: false,
+      source: "https://www.vinted.com/help/222-selling-fees", // buyer pays the protection fee; seller fee per third-party blogs
+      listingFee: 0, paymentPct: 0, paymentFixed: 0, monthly: 0
     }
   ]
 };
