@@ -5,7 +5,7 @@ window.FEES = {
   updated: "2026-10-19",
   marketplaces: [
     {
-      id: "etsy", name: "Etsy (US)", verified: false,
+      id: "etsy", name: "Etsy (US)", verified: "partial", verifiedOn: "2026-10-19", // listing $0.20 + 6.5% transaction (item+shipping+gift wrap) confirmed from Etsy Fee Basics text; US payment processing 3%+$0.25 and Offsite Ads NOT confirmed
       source: "https://help.etsy.com/hc/en-us/articles/360035902374-Etsy-Fee-Basics",
       listingFee: 0.20,
       pctOnItemAndShipping: 6.5,      // transaction fee

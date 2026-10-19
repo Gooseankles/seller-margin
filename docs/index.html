@@ -96,7 +96,7 @@ function render(){
   });
   $("note").textContent = "Fee data last updated " + FEES.updated +
     ". Rates are estimates and may not match your category, country or store plan; confirm on each marketplace's official fee page. " +
-    "Amazon's monthly subscription is spread across your units/month. Etsy Offsite Ads rate is applied to the order total and is unverified. Not financial or tax advice. This site is not affiliated with or endorsed by Etsy, eBay or Amazon; names are used only to describe fee schedules.";
+    "Amazon's monthly subscription is spread across your units/month. Etsy listing fee and 6.5% transaction fee are confirmed from Etsy Fee Basics (2026-10-19); its payment processing rate (3% + $0.25 assumed for US sellers) and the Offsite Ads rate are unconfirmed. Depop, Vinted and Amazon Handmade rates are also unconfirmed. Not financial or tax advice. This site is not affiliated with or endorsed by Etsy, eBay or Amazon; names are used only to describe fee schedules.";
 }
 document.querySelectorAll("input,select").forEach(i => i.addEventListener("input", render));
 $("wl").addEventListener("submit", async e => {
