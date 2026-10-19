@@ -35,3 +35,10 @@ sellermargin.io, marginmate.co, feecalc.shop, sellerfees.io
 3. Create GitHub repo + Pages.
 4. Build paid workbook.
 5. Brand + social handles, launch posts.
+
+## Update 2026-10-19: Skeptic review -> narrow pivot
+- Calculator niche is crowded (Voolist, Underpriced, Checkoutpage, etc.). No audience = biggest risk.
+- Decision: do NOT buy a domain until the calculator shows traction (target: 100 users + email signups in 2 weeks of posting in seller communities).
+- Verify all fees incl. Etsy Offsite Ads (added as unverified option). Add disclaimer (done).
+- Fallback if no traction: CSV-export profit analyzer (upload Etsy/eBay order export -> true profit per SKU), sold as outcome, not template.
+- Avoid marketplace names in brand/domain; nominative use only.

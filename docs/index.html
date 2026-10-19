@@ -15,7 +15,7 @@
   p.lead{color:var(--mut);margin-top:0}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
   label{display:block;font-size:.85rem;color:var(--mut)}
-  input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font-size:1rem}
+  input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font-size:1rem}
   table{width:100%;border-collapse:collapse;margin-top:12px}
   th,td{padding:10px 8px;text-align:right;border-bottom:1px solid var(--line)}
   th:first-child,td:first-child{text-align:left}
@@ -37,6 +37,8 @@
     <div><label for="cost">Your item cost ($)</label><input id="cost" type="number" min="0" step="0.01" value="8"></div>
     <div><label for="shipcost">Your shipping cost ($)</label><input id="shipcost" type="number" min="0" step="0.01" value="5"></div>
     <div><label for="units">Units sold / month</label><input id="units" type="number" min="1" step="1" value="20"></div>
+    <div><label for="offsite">Etsy Offsite Ads</label>
+      <select id="offsite"><option value="0">Not from ads</option><option value="15">Ad sale – 15%</option><option value="12">Ad sale – 12%</option></select></div>
   </div>
 
   <div class="wrap"><table id="out"><thead>
@@ -56,9 +58,10 @@
 const $ = id => document.getElementById(id);
 const money = n => (n < 0 ? "-$" : "$") + Math.abs(n).toFixed(2);
 
-function calc(m, p, s, cost, shipCost, units){
+function calc(m, p, s, cost, shipCost, units, offsite){
   const gross = p + s;
   let pct = 0;
+  if (m.id === "etsy" && offsite) pct += gross * offsite / 100; // Offsite Ads fee on order total (unverified)
   if (m.pctOnItemAndShipping) pct += gross * m.pctOnItemAndShipping / 100;
   if (m.pctOnItemOnly) {
     let r = p * m.pctOnItemOnly / 100;
@@ -75,7 +78,7 @@ function calc(m, p, s, cost, shipCost, units){
 function render(){
   const v = id => Math.max(0, parseFloat($(id).value) || 0);
   const units = Math.max(1, v("units"));
-  const rows = FEES.marketplaces.map(m => ({m, ...calc(m, v("price"), v("ship"), v("cost"), v("shipcost"), units)}));
+  const rows = FEES.marketplaces.map(m => ({m, ...calc(m, v("price"), v("ship"), v("cost"), v("shipcost"), units, parseFloat($("offsite").value))}));
   const best = Math.max(...rows.map(r => r.profit));
   const tb = $("out").tBodies[0];
   tb.innerHTML = "";
@@ -87,9 +90,9 @@ function render(){
   });
   $("note").textContent = "Fee data last updated " + FEES.updated +
     ". Rates are estimates and may not match your category, country or store plan; confirm on each marketplace's official fee page. " +
-    "Amazon's monthly subscription is spread across your units/month. Not financial or tax advice.";
+    "Amazon's monthly subscription is spread across your units/month. Etsy Offsite Ads rate is applied to the order total and is unverified. Not financial or tax advice. This site is not affiliated with or endorsed by Etsy, eBay or Amazon; names are used only to describe fee schedules.";
 }
-document.querySelectorAll("input").forEach(i => i.addEventListener("input", render));
+document.querySelectorAll("input,select").forEach(i => i.addEventListener("input", render));
 $("buy").addEventListener("click", e => e.preventDefault());
 render();
 </script>
