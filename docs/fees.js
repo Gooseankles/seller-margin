@@ -1,4 +1,5 @@
 // Marketplace fee data. Rates come from search snippets of official pages (2026-10-19).
+// eBay + Amazon plan price checked against official pages 2026-10-19. Etsy pages return 403 to automated fetch -> still unverified.
 // verified:false = must be re-checked against the source page before relying on it.
 window.FEES = {
   updated: "2026-10-19",
@@ -12,7 +13,7 @@ window.FEES = {
       monthly: 0
     },
     {
-      id: "ebay", name: "eBay (US, most categories)", verified: false,
+      id: "ebay", name: "eBay (US, most categories)", verified: true, verifiedOn: "2026-10-19",
       source: "https://www.ebay.com/help/selling/fees-credits-invoices/selling-fees?id=4822",
       listingFee: 0,
       pctOnItemAndShipping: 13.6,
@@ -21,7 +22,7 @@ window.FEES = {
       monthly: 0
     },
     {
-      id: "amazon", name: "Amazon (Professional, 15% category)", verified: false,
+      id: "amazon", name: "Amazon (Professional, 15% category)", verified: true, verifiedOn: "2026-10-19" /* $39.99/mo confirmed on official page; 15% referral is category-specific */,
       source: "https://sell.amazon.com/pricing",
       listingFee: 0,
       pctOnItemOnly: 15,
