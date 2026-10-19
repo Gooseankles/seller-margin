@@ -50,7 +50,13 @@
   <div class="cta">
     <strong>Want to track this for your whole shop?</strong>
     The Seller Margin Toolkit (Google Sheets) adds inventory, sales log, ad-spend ROAS and quarterly tax estimates.
-    <a href="#" id="buy">Coming soon</a>
+    Join the waitlist for launch pricing:
+    <form id="wl" action="https://formspree.io/f/mljgknbd" method="POST" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <input type="email" name="email" required placeholder="you@example.com" aria-label="Email" style="flex:1;min-width:200px">
+      <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button type="submit" style="padding:10px 16px;border:0;border-radius:8px;background:var(--acc);color:#fff;font-size:1rem;cursor:pointer">Notify me</button>
+    </form>
+    <p id="wlmsg" class="note" style="margin-top:8px"></p>
   </div>
 </main>
 <script src="fees.js"></script>
@@ -93,7 +99,15 @@ function render(){
     "Amazon's monthly subscription is spread across your units/month. Etsy Offsite Ads rate is applied to the order total and is unverified. Not financial or tax advice. This site is not affiliated with or endorsed by Etsy, eBay or Amazon; names are used only to describe fee schedules.";
 }
 document.querySelectorAll("input,select").forEach(i => i.addEventListener("input", render));
-$("buy").addEventListener("click", e => e.preventDefault());
+$("wl").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, msg = $("wlmsg");
+  try {
+    const r = await fetch(f.action, {method:"POST", body:new FormData(f), headers:{Accept:"application/json"}});
+    msg.textContent = r.ok ? "Thanks! We'll email you once at launch. No spam." : "Something went wrong. Please try again.";
+    if (r.ok) f.reset();
+  } catch { msg.textContent = "Network error. Please try again."; }
+});
 render();
 </script>
 </body>
